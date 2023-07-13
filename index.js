@@ -9,6 +9,7 @@ class Game{
         this.scene = new THREE.Scene();
         this.delta = 0;
         this.FPS = 50;
+        this.play = true;
 
         this.getWinSize();
         this.initFPS();
@@ -29,6 +30,10 @@ class Game{
             this.camera.updateProjectionMatrix();
             this.renderer.setSize(this.winSize.width, this.winSize.height);
         });
+        window.addEventListener('keypress', (e) => {
+            if(e.code === "KeyP")
+                this.play = !this.play;
+        })
     }
     getWinSize(){
         this.winSize = {
@@ -64,7 +69,7 @@ class Game{
         const canvas = document.querySelector('.webgl');
         this.renderer = new THREE.WebGLRenderer({ canvas });
         this.renderer.setSize(this.winSize.width, this.winSize.height);
-        this.controls = new OrbitControls(this.camera, canvas);
+        // this.controls = new OrbitControls(this.camera, canvas);
         this.canvas = canvas;
     }
     loop(){
@@ -75,11 +80,14 @@ class Game{
             }
 
             this.stats.update();
-            this.controls.update();
+            // this.controls.update();
             
             this.renderer.render(this.scene, this.camera)
-            this.env.update();
-            this.player.update();
+            if(this.play){
+                const collision_space = this.env.update();
+                this.player.update();
+                this.play = this.player.checkCollision(collision_space);
+            }
         })
     }
 }

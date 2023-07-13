@@ -2,6 +2,8 @@ import * as THREE from 'three';
 
 export default class Env{
     constructor(scene){
+        this.choice = [-2, 0, 2]
+
         const plane_geom = new THREE.PlaneGeometry(10, 60);
         plane_geom.rotateX(-Math.PI / 2);
         const plane_mat = new THREE.MeshMatcapMaterial({color: 0xffffff});
@@ -16,7 +18,6 @@ export default class Env{
         }
         scene.add(this.plane_mesh);
 
-        const choice = [-2, 0, 2]
         const geom = new THREE.BoxGeometry();
         const mat = new THREE.MeshMatcapMaterial({color: 0xffffff});
         this.obstacle_mesh = new THREE.InstancedMesh(geom, mat, 20);
@@ -38,28 +39,31 @@ export default class Env{
             this.plane_mesh.setMatrixAt(i, temp.matrix);
             this.plane_mesh.instanceMatrix.needsUpdate = true;
         }
-
-        const choice = [-2, 0, 2]
+        const collision_space = [0, 0, 0];
         for(let i = 0; i<this.obstacle_mesh.count; i++){
             this.obstacle_mesh.getMatrixAt(i, matrix)
             matrix.decompose(temp.position, temp.quaternion, temp.scale)
             if(temp.position.z < -35)
-                temp.position.set(choice[Math.round(Math.random() * 2)], 0, 343)
+                temp.position.set(this.choice[Math.round(Math.random() * 2)], 0, 343)
             else
                 temp.position.z -= 1;
+            if(temp.position.z < 2 && temp.position.z > 0){
+                collision_space[this.choice.indexOf(temp.position.x)] = 1
+            }
+
             temp.updateMatrix();
             this.obstacle_mesh.setMatrixAt(i, temp.matrix);
             this.obstacle_mesh.instanceMatrix.needsUpdate = true;
         }
+        return collision_space
         
     }
     addObs(){
         const temp = new THREE.Matrix4()
-        const choice = [-2, 0, 2]
         const count = this.obstacle_mesh.count;
         if(count < 20){
                 for(let i = count; i<count+2; i++){
-                    temp.setPosition(choice[Math.round(Math.random() * 2)], 0, 263)
+                    temp.setPosition(this.choice[Math.round(Math.random() * 2)], 0, 263)
                     this.obstacle_mesh.setMatrixAt(i, temp);
                     this.obstacle_mesh.setColorAt(i, new THREE.Color(0xff0000 ))
                     this.obstacle_mesh.instanceMatrix.needsUpdate = true;
