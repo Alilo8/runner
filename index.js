@@ -7,6 +7,9 @@ import Player from './player.js';
 class Game{
     constructor(){
         this.scene = new THREE.Scene();
+        this.delta = 0;
+        this.FPS = 50;
+
         this.getWinSize();
         this.initFPS();
         this.initLight();
@@ -66,11 +69,17 @@ class Game{
     }
     loop(){
         this.renderer.setAnimationLoop(() => {
+            this.delta += 1;
+            if(this.delta % this.FPS == 0){
+                this.env.addObs();
+            }
+
             this.stats.update();
             this.controls.update();
             
             this.renderer.render(this.scene, this.camera)
-            this.env.changePosition();
+            this.env.update();
+            this.player.update();
         })
     }
 }
