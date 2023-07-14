@@ -34,6 +34,14 @@ class Game{
             if(e.code === "KeyP")
                 this.play = !this.play;
         })
+        const fullscreen_btn = document.querySelector('.button')
+        const body = document.getElementsByTagName('body')
+        fullscreen_btn.onclick = (e) => {
+            if(document.fullscreenElement)
+                document.exitFullscreen()
+            else
+                body[0].requestFullscreen()
+        }
     }
     getWinSize(){
         this.winSize = {
