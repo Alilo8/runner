@@ -3,6 +3,7 @@ import * as THREE from 'three';
 export default class Player{
     constructor(scene){
         this.inAir = false;
+        this.duck = false;
         this.velocity = -0.01;
         this.g = 0.005;
         this.choice = [-2, 0, 2]
@@ -14,6 +15,10 @@ export default class Player{
         const mat = new THREE.MeshMatcapMaterial();
         this.box = new THREE.Mesh(geom, mat);
         scene.add(this.box)
+        
+        this.initEventListeners();
+    }
+    initEventListeners(){
         window.addEventListener('keypress', (e) => {
             if(e.code === "KeyA" && this.box.position.x < 2)
                 this.box.position.x += 2;
@@ -24,6 +29,11 @@ export default class Player{
                 this.velocity = 0.2;
                 this.g = -0.005;
             }
+            if(e.code === "KeyS"){
+                this.duck = true;
+                setTimeout(() => {this.duck = false; console.log(this.duck)}, 3000)
+            }
+
         })
         window.addEventListener('touchstart', e => {
             ;[...e.changedTouches].forEach(touch => {
@@ -48,9 +58,15 @@ export default class Player{
                             this.box.position.x -= 2;
                     }
                     else{
-                        this.inAir = true;
-                        this.velocity = 0.2;
-                        this.g = -0.005;
+                        if(diffY > 0){
+                            this.duck = true;
+                            setTimeout(() => {this.duck = false; console.log(this.duck)}, 3000)
+                        }
+                        else{
+                            this.inAir = true;
+                            this.velocity = 0.2;
+                            this.g = -0.005;
+                        }
                     }
                     this.move = false;
                 }
@@ -72,9 +88,12 @@ export default class Player{
         }
     }
     checkCollision(collision_space){
-        if(collision_space[this.choice.indexOf(this.box.position.x)] == 1){
-            return false;
-        }
+        if(this.inAir && !collision_space[1][this.choice.indexOf(this.box.position.x)])
+            return true
+        else if(this.duck && !collision_space[0][this.choice.indexOf(this.box.position.x)])
+            return true
+        else if(collision_space[0][this.choice.indexOf(this.box.position.x)] || collision_space[1][this.choice.indexOf(this.box.position.x)])
+            return false
         return true;
     }
 

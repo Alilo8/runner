@@ -39,16 +39,19 @@ export default class Env{
             this.plane_mesh.setMatrixAt(i, temp.matrix);
             this.plane_mesh.instanceMatrix.needsUpdate = true;
         }
-        const collision_space = [0, 0, 0];
+        const collision_space = [[0, 0, 0], [0, 0, 0]];
         for(let i = 0; i<this.obstacle_mesh.count; i++){
             this.obstacle_mesh.getMatrixAt(i, matrix)
             matrix.decompose(temp.position, temp.quaternion, temp.scale)
             if(temp.position.z < -35)
-                temp.position.set(this.choice[Math.round(Math.random() * 2)], 0, 343)
+                temp.position.set(this.choice[Math.round(Math.random() * 2)], Math.round(Math.random()), 343)
             else
                 temp.position.z -= 1;
             if(temp.position.z < 2 && temp.position.z > 0){
-                collision_space[this.choice.indexOf(temp.position.x)] = 1
+                if(temp.position.y)
+                    collision_space[1][this.choice.indexOf(temp.position.x)] = 1
+                else
+                    collision_space[0][this.choice.indexOf(temp.position.x)] = 1
             }
 
             temp.updateMatrix();
@@ -63,7 +66,7 @@ export default class Env{
         const count = this.obstacle_mesh.count;
         if(count < 20){
                 for(let i = count; i<count+2; i++){
-                    temp.setPosition(this.choice[Math.round(Math.random() * 2)], 0, 263)
+                    temp.setPosition(this.choice[Math.round(Math.random() * 2)], Math.round(Math.random()), 263)
                     this.obstacle_mesh.setMatrixAt(i, temp);
                     this.obstacle_mesh.setColorAt(i, new THREE.Color(0xff0000 ))
                     this.obstacle_mesh.instanceMatrix.needsUpdate = true;
