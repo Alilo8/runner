@@ -6,7 +6,7 @@ export default class Player{
         this.duck = false;
         this.velocity = -0.01;
         this.g = 0.005;
-        this.choice = [-2, 0, 2]
+        this.choice = [-2, 0, 2];
         this.move = false;
         this.move_vert = 0;
         this.move_hor = 0;
@@ -59,13 +59,13 @@ export default class Player{
                     }
                     else{
                         if(diffY > 0){
-                            this.duck = true;
-                            setTimeout(() => {this.duck = false; console.log(this.duck)}, 3000)
-                        }
-                        else{
                             this.inAir = true;
                             this.velocity = 0.2;
                             this.g = -0.005;
+                        }
+                        else{
+                            this.duck = true;
+                            setTimeout(() => {this.duck = false; console.log(this.duck)}, 3000);
                         }
                     }
                     this.move = false;
