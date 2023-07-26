@@ -3,11 +3,18 @@ import * as THREE from 'three';
 export default class Env{
     constructor(scene){
         this.choice = [-2, 0, 2]
-        this.colors = [0xd087df, 0x00ddd2, 0x307981]
-        console.log(this.colors[Math.random() * 2])
+        this.colors = [0x97e2f0, 0xf0ddd2, 0xf07981]
+
         const plane_geom = new THREE.PlaneGeometry(10, 60);
         plane_geom.rotateX(-Math.PI / 2);
-        const plane_mat = new THREE.MeshPhongMaterial({color: 0xffffff});
+        const loader = new THREE.CubeTextureLoader();
+        loader.setPath( 'assets/' );
+        const cubTexture = loader.load( [
+            'nx.png', 'px.png',
+            'ny.png', 'py.png',
+            'nz.png', 'pz.png'
+        ] );
+        const plane_mat = new THREE.MeshPhongMaterial({color: 0xffffff, envMap: cubTexture, refractionRatio:0, reflectivity:0.8});
         this.plane_mesh = new THREE.InstancedMesh(plane_geom, plane_mat, 5);
         this.plane_mesh.position.y -= 1;
         this.plane_mesh.receiveShadow = true;
@@ -34,8 +41,8 @@ export default class Env{
         scene.add(strip_mesh)
 
         const geom = new THREE.BoxGeometry(2,2,2);
-        const texture = new THREE.TextureLoader().load('./wooden_box.jpg')
-        const mat = new THREE.MeshPhongMaterial({color: 0xffffff, map: texture});
+        const texture = new THREE.TextureLoader().load('assets/wooden_box.jpg')
+        const mat = new THREE.MeshStandardMaterial({color: 0xbbbbbb, map: texture});
         this.obstacle_mesh = new THREE.InstancedMesh(geom, mat, 20);
         this.obstacle_mesh.count = 0;
         this.obstacle_mesh.castShadow = true;

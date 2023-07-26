@@ -11,8 +11,8 @@ export default class Player{
         this.move_vert = 0;
         this.move_hor = 0;
 
-        const geom = new THREE.BoxGeometry();
-        const mat = new THREE.MeshPhongMaterial({color: 'white'});
+        const geom = new THREE.SphereGeometry();
+        const mat = new THREE.MeshStandardMaterial({color: 'blue', roughness: 0.2 });
         this.box = new THREE.Mesh(geom, mat);
         this.box.castShadow = true;
         scene.add(this.box)

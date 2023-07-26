@@ -59,6 +59,14 @@ class Game{
     }
     initLight(){
         // this.scene.background = new THREE.Color( 0x000066 );
+        const loader = new THREE.CubeTextureLoader();
+        loader.setPath( 'assets/' );
+        const texture = loader.load( [
+            'px.png', 'nx.png',
+            'nz.png', 'pz.png',
+            'ny.png', 'py.png'
+        ] );
+        this.scene.background = texture
         this.scene.fog = new THREE.Fog( 0x000000, 0, 500 );
 
         // const ambientLight = new THREE.AmbientLight( 0xcccccc );
@@ -71,11 +79,11 @@ class Game{
         
         let pointLight = new THREE.PointLight( 0x888888, 1 );
         // pointLight.position.set( 1, 1, 1.5 ).normalize();
-        pointLight.position.set(0, 10, 200);
-        pointLight.lookAt(0, 0, 0)
-        this.scene.add( pointLight );
+        // pointLight.position.set(0, 10, 200);
+        // pointLight.lookAt(0, 0, 0)
+        // this.scene.add( pointLight );
 
-        pointLight = new THREE.PointLight( 0x888888, 1 );
+        // pointLight = new THREE.PointLight( 0x888888, 1 );
         pointLight.position.set(0, 10, -5);
         pointLight.lookAt(0, 0, 0)
         pointLight.castShadow = true;
@@ -95,7 +103,7 @@ class Game{
         this.renderer = new THREE.WebGLRenderer({ canvas });
         this.renderer.shadowMap.enabled = true;
         this.renderer.setSize(this.winSize.width, this.winSize.height);
-        this.controls = new OrbitControls(this.camera, canvas);
+        // this.controls = new OrbitControls(this.camera, canvas);
         this.canvas = canvas;
 
         THREE.ColorManagement.enabled = true
@@ -118,7 +126,7 @@ class Game{
             }
 
             this.stats.update();
-            this.controls.update();
+            // this.controls.update();
             
             // this.renderer.render(this.scene, this.camera)
             this.composer.render()
