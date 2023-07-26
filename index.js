@@ -1,6 +1,9 @@
 import * as THREE from 'three';
 import Stats from "Stats";
 import { OrbitControls } from "OrbitControls";
+import { EffectComposer } from "EffectComposer";
+import { RenderPass } from 'RenderPass';
+import { UnrealBloomPass } from 'UnrealBloomPass';
 import Env from './environment.js';
 import Player from './player.js';
 
@@ -55,15 +58,29 @@ class Game{
         document.body.append(this.stats.dom);
     }
     initLight(){
-        this.scene.background = new THREE.Color( 0x00aaff );
-        this.scene.fog = new THREE.Fog( 0x00aaff, 0, 500 );
+        // this.scene.background = new THREE.Color( 0x000066 );
+        this.scene.fog = new THREE.Fog( 0x000000, 0, 500 );
 
         // const ambientLight = new THREE.AmbientLight( 0xcccccc );
         // this.scene.add( ambientLight );
-        const directionalLight = new THREE.DirectionalLight( 0xffffff, 2 );
+        const directionalLight = new THREE.DirectionalLight( 0x888888, 1 );
         // directionalLight.position.set( 1, 1, 1.5 ).normalize();
-        directionalLight.position.set(0, 10, 10);
+        directionalLight.position.set(10, 10, 0);
+        directionalLight.lookAt(0, 0, 0)
         this.scene.add( directionalLight );
+        
+        let pointLight = new THREE.PointLight( 0x888888, 1 );
+        // pointLight.position.set( 1, 1, 1.5 ).normalize();
+        pointLight.position.set(0, 10, 200);
+        pointLight.lookAt(0, 0, 0)
+        this.scene.add( pointLight );
+
+        pointLight = new THREE.PointLight( 0x888888, 1 );
+        pointLight.position.set(0, 10, -5);
+        pointLight.lookAt(0, 0, 0)
+        pointLight.castShadow = true;
+        this.scene.add( pointLight );
+        
         // const ambientLight = new THREE.AmbientLight();
         // this.scene.add(ambientLight);
       }
@@ -76,9 +93,22 @@ class Game{
     initAction(){
         const canvas = document.querySelector('.webgl');
         this.renderer = new THREE.WebGLRenderer({ canvas });
+        this.renderer.shadowMap.enabled = true;
         this.renderer.setSize(this.winSize.width, this.winSize.height);
-        // this.controls = new OrbitControls(this.camera, canvas);
+        this.controls = new OrbitControls(this.camera, canvas);
         this.canvas = canvas;
+
+        THREE.ColorManagement.enabled = true
+        this.renderer.toneMapping = THREE.ACESFilmicToneMapping
+        const target = new THREE.WebGLRenderTarget(this.winSize.width, this.winSize.height, {
+        type: THREE.HalfFloatType,
+        format: THREE.RGBAFormat,
+        })
+        target.samples = 8
+        this.composer = new EffectComposer( this.renderer, target)
+        this.composer.addPass(new RenderPass(this.scene, this.camera))
+        // Setting threshold to 1 will make sure nothing glows
+        this.composer.addPass(new UnrealBloomPass(undefined, 1, 1, 1))
     }
     loop(){
         this.renderer.setAnimationLoop(() => {
@@ -88,9 +118,10 @@ class Game{
             }
 
             this.stats.update();
-            // this.controls.update();
+            this.controls.update();
             
-            this.renderer.render(this.scene, this.camera)
+            // this.renderer.render(this.scene, this.camera)
+            this.composer.render()
             if(this.play){
                 const collision_space = this.env.update();
                 this.player.update();

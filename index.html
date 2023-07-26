@@ -17,6 +17,14 @@
             position: fixed;
             right: 0;
             top: 0;
+            background: none;
+            border: none;
+            width: 26px;
+            height: 29px;
+            cursor: pointer;
+        }
+        .button:hover{
+            background-color: gray;
         }
     </style>
     <script type="importmap">
@@ -26,13 +34,16 @@
                 "Stats": "https://unpkg.com/three@0.154.0/examples/jsm/libs/stats.module.js",
                 "GUI": "https://unpkg.com/three@0.154.0/examples/jsm/libs/lil-gui.module.min.js",
                 "GLTFLoader": "https://unpkg.com/three@0.154.0/examples/jsm/loaders/GLTFLoader.js",
-                "OrbitControls": "https://unpkg.com/three@0.154.0/examples/jsm/controls/OrbitControls.js"
+                "OrbitControls": "https://unpkg.com/three@0.154.0/examples/jsm/controls/OrbitControls.js",
+                "EffectComposer" : "https://unpkg.com/three@0.152.2/examples/jsm/postprocessing/EffectComposer.js",
+                "RenderPass": "https://unpkg.com/three@0.152.2/examples/jsm/postprocessing/RenderPass.js",
+                "UnrealBloomPass" : "https://unpkg.com/three@0.152.2/examples/jsm/postprocessing/UnrealBloomPass.js"
             }
         }
     </script>
 </head>
 <body>
-    <input class="button" type="button" value="Full"/>
+    <button class="button"><img src="fullscreen_icon.png"/></button>
     <canvas class="webgl"></canvas>
     <script type="module" src="./index.js"></script>
 </body>
