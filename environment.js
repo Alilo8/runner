@@ -14,7 +14,9 @@ export default class Env{
             'ny.png', 'py.png',
             'nz.png', 'pz.png'
         ] );
-        const plane_mat = new THREE.MeshPhongMaterial({color: 0xffffff, envMap: cubTexture, refractionRatio:0, reflectivity:0.8});
+        const ground_texture = new THREE.TextureLoader().load('assets/ground.png')
+
+        const plane_mat = new THREE.MeshPhongMaterial({color: 0xffffff, map: ground_texture, envMap: cubTexture});
         this.plane_mesh = new THREE.InstancedMesh(plane_geom, plane_mat, 5);
         this.plane_mesh.position.y -= 1;
         this.plane_mesh.receiveShadow = true;
@@ -29,23 +31,24 @@ export default class Env{
 
         const strip_geom = new THREE.PlaneGeometry(0.1, 360);
         strip_geom.rotateX(-Math.PI / 2);
-        const strip_mat = new THREE.MeshStandardMaterial({color: 0xffffff, toneMapped: false, emissive: 'white', emissiveIntensity: 10})
+        const strip_mat = new THREE.MeshStandardMaterial({color: 0xffffff, toneMapped: false, emissive: 'white', emissiveIntensity: 4})
         let strip_mesh = new THREE.Mesh(strip_geom, strip_mat)
-        strip_mesh.position.x -= 4.2;
+        strip_mesh.position.x -= 3.9;
         strip_mesh.position.z += 150;
         scene.add(strip_mesh)
 
         strip_mesh = new THREE.Mesh(strip_geom, strip_mat)
-        strip_mesh.position.x += 4.2;
+        strip_mesh.position.x += 3.9;
         strip_mesh.position.z += 150;
         scene.add(strip_mesh)
 
         const geom = new THREE.BoxGeometry(2,2,2);
-        const texture = new THREE.TextureLoader().load('assets/wooden_box.jpg')
-        const mat = new THREE.MeshStandardMaterial({color: 0xbbbbbb, map: texture});
+        const glass_texture = new THREE.TextureLoader().load('assets/glass.png')
+        const mat = new THREE.MeshStandardMaterial({color: 0xffffff, roughness:0, map:glass_texture});
         this.obstacle_mesh = new THREE.InstancedMesh(geom, mat, 20);
         this.obstacle_mesh.count = 0;
         this.obstacle_mesh.castShadow = true;
+        this.addObs()
         scene.add(this.obstacle_mesh)
         
     }
@@ -92,9 +95,9 @@ export default class Env{
                 for(let i = count; i<count+2; i++){
                     temp.setPosition(this.choice[Math.round(Math.random() * 2)], Math.round(Math.random()) * 2, 263)
                     this.obstacle_mesh.setMatrixAt(i, temp);
-                    this.obstacle_mesh.setColorAt(i, new THREE.Color(0xff0000 ))
+                    // this.obstacle_mesh.setColorAt(i, new THREE.Color(0xffffff * Math.random() ))
                     this.obstacle_mesh.instanceMatrix.needsUpdate = true;
-                    this.obstacle_mesh.instanceColor.needsUpdate = true;
+                    // this.obstacle_mesh.instanceColor.needsUpdate = true;
                 }
             this.obstacle_mesh.count += 2;
         }

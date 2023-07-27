@@ -67,10 +67,11 @@ class Game{
             'ny.png', 'py.png'
         ] );
         this.scene.background = texture
+        
         this.scene.fog = new THREE.Fog( 0x000000, 0, 500 );
 
-        // const ambientLight = new THREE.AmbientLight( 0xcccccc );
-        // this.scene.add( ambientLight );
+        const ambientLight = new THREE.AmbientLight( 0x444444 );
+        this.scene.add( ambientLight );
         const directionalLight = new THREE.DirectionalLight( 0x888888, 1 );
         // directionalLight.position.set( 1, 1, 1.5 ).normalize();
         directionalLight.position.set(10, 10, 0);
@@ -78,12 +79,12 @@ class Game{
         this.scene.add( directionalLight );
         
         let pointLight = new THREE.PointLight( 0x888888, 1 );
-        // pointLight.position.set( 1, 1, 1.5 ).normalize();
-        // pointLight.position.set(0, 10, 200);
-        // pointLight.lookAt(0, 0, 0)
-        // this.scene.add( pointLight );
+        pointLight.position.set( 1, 1, 1.5 ).normalize();
+        pointLight.position.set(0, 10, 200);
+        pointLight.lookAt(0, 0, 0)
+        this.scene.add( pointLight );
 
-        // pointLight = new THREE.PointLight( 0x888888, 1 );
+        pointLight = new THREE.PointLight( 0x888888, 1 );
         pointLight.position.set(0, 10, -5);
         pointLight.lookAt(0, 0, 0)
         pointLight.castShadow = true;
@@ -94,7 +95,7 @@ class Game{
       }
     initCamera(){
         this.camera = new THREE.PerspectiveCamera(45, this.winSize.width / this.winSize.height);
-        this.camera.position.set(0, 5, -13);
+        this.camera.position.set(0, 3.5, -13);
         this.camera.lookAt(0, 0, 20);
         this.scene.add(this.camera);
     }
@@ -103,7 +104,7 @@ class Game{
         this.renderer = new THREE.WebGLRenderer({ canvas });
         this.renderer.shadowMap.enabled = true;
         this.renderer.setSize(this.winSize.width, this.winSize.height);
-        // this.controls = new OrbitControls(this.camera, canvas);
+        this.controls = new OrbitControls(this.camera, canvas);
         this.canvas = canvas;
 
         THREE.ColorManagement.enabled = true
@@ -126,7 +127,7 @@ class Game{
             }
 
             this.stats.update();
-            // this.controls.update();
+            this.controls.update();
             
             // this.renderer.render(this.scene, this.camera)
             this.composer.render()

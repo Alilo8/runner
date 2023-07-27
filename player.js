@@ -12,9 +12,11 @@ export default class Player{
         this.move_hor = 0;
 
         const geom = new THREE.SphereGeometry();
-        const mat = new THREE.MeshStandardMaterial({color: 'blue', roughness: 0.2 });
+        const texture = new THREE.TextureLoader().load('assets/fire.png')
+        const mat = new THREE.MeshStandardMaterial({color: 'white', roughness: 0, map: texture});
         this.box = new THREE.Mesh(geom, mat);
         this.box.castShadow = true;
+
         scene.add(this.box)
         
         this.initEventListeners();
@@ -87,6 +89,7 @@ export default class Player{
                 this.g *= -1;
             }
         }
+        this.box.rotateX(0.3)
     }
     checkCollision(collision_space){
         if(this.inAir && !collision_space[1][this.choice.indexOf(this.box.position.x)])
