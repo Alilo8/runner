@@ -35,6 +35,8 @@ export default class Player{
             if(e.code === "KeyS"){
                 this.duck = true;
                 setTimeout(() => {this.duck = false; console.log(this.duck)}, 3000)
+                this.velocity = -0.2;
+                this.g = -0.005;
             }
 
         })
