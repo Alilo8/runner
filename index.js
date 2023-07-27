@@ -104,7 +104,7 @@ class Game{
         this.renderer = new THREE.WebGLRenderer({ canvas });
         this.renderer.shadowMap.enabled = true;
         this.renderer.setSize(this.winSize.width, this.winSize.height);
-        this.controls = new OrbitControls(this.camera, canvas);
+        // this.controls = new OrbitControls(this.camera, canvas);
         this.canvas = canvas;
 
         THREE.ColorManagement.enabled = true
@@ -127,7 +127,7 @@ class Game{
             }
 
             this.stats.update();
-            this.controls.update();
+            // this.controls.update();
             
             // this.renderer.render(this.scene, this.camera)
             this.composer.render()
