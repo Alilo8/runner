@@ -25,7 +25,7 @@ export default class Env{
         for(let i = 0; i<5; i++){
             temp.setPosition(0, 0, i*60)
             this.plane_mesh.setMatrixAt(i, temp);
-            this.plane_mesh.setColorAt(i, new THREE.Color(this.colors[Math.round(Math.random() * 2)]))
+            this.plane_mesh.setColorAt(i, new THREE.Color(this.colors[i%3]))
         }
         scene.add(this.plane_mesh);
 

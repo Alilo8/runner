@@ -64,7 +64,7 @@ class Game{
         const texture = loader.load( [
             'px.png', 'nx.png',
             'nz.png', 'pz.png',
-            'ny.png', 'py.png'
+            'py.png', 'ny.png'
         ] );
         this.scene.background = texture
         
@@ -79,12 +79,12 @@ class Game{
         this.scene.add( directionalLight );
         
         let pointLight = new THREE.PointLight( 0x888888, 1 );
-        pointLight.position.set( 1, 1, 1.5 ).normalize();
-        pointLight.position.set(0, 10, 200);
-        pointLight.lookAt(0, 0, 0)
-        this.scene.add( pointLight );
+        // pointLight.position.set( 1, 1, 1.5 ).normalize();
+        // pointLight.position.set(0, 10, 200);
+        // pointLight.lookAt(0, 0, 0)
+        // this.scene.add( pointLight );
 
-        pointLight = new THREE.PointLight( 0x888888, 1 );
+        // pointLight = new THREE.PointLight( 0x888888, 1 );
         pointLight.position.set(0, 10, -5);
         pointLight.lookAt(0, 0, 0)
         pointLight.castShadow = true;
