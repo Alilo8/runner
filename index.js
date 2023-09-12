@@ -55,7 +55,7 @@ class Game{
     initFPS(){
         this.stats = new Stats();
         this.stats.showPanel(0);
-        document.body.append(this.stats.dom);
+        // document.body.append(this.stats.dom);
     }
     initLight(){
         // this.scene.background = new THREE.Color( 0x000066 );
@@ -95,7 +95,7 @@ class Game{
       }
     initCamera(){
         this.camera = new THREE.PerspectiveCamera(45, this.winSize.width / this.winSize.height);
-        this.camera.position.set(0, 3.5, -13);
+        this.camera.position.set(0, 3, -13);
         this.camera.lookAt(0, 0, 20);
         this.scene.add(this.camera);
     }
@@ -120,20 +120,22 @@ class Game{
         this.composer.addPass(new UnrealBloomPass(undefined, 1, 1, 1))
     }
     loop(){
+        let speed = 1;
         this.renderer.setAnimationLoop(() => {
-            this.delta += 1;
-            if(this.delta % this.FPS == 0){
-                this.env.addObs();
-            }
+            
 
-            this.stats.update();
+            // this.stats.update();
             // this.controls.update();
             
             // this.renderer.render(this.scene, this.camera)
             this.composer.render()
             if(this.play){
-                const collision_space = this.env.update();
-                this.player.update();
+                this.delta += 1;
+                if(this.delta % this.FPS == 0){
+                    this.env.addObs();
+                }
+                speed = this.player.update();
+                const collision_space = this.env.update(speed);
                 this.play = this.player.checkCollision(collision_space);
             }
         })

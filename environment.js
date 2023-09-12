@@ -52,16 +52,16 @@ export default class Env{
         scene.add(this.obstacle_mesh)
         
     }
-    update(){
+    update(speed){
         const temp = new THREE.Object3D();
         const matrix = new THREE.Matrix4()
         for(let i = 0; i<5; i++){
             this.plane_mesh.getMatrixAt(i, matrix)
             matrix.decompose(temp.position, temp.quaternion, temp.scale)
-            if(temp.position.z < -35)
-                temp.position.z = 263;
+            if(temp.position.z < -34)
+                temp.position.z = 264 - speed * 2;
             else
-                temp.position.z -= 1;
+                temp.position.z -= speed;
             temp.updateMatrix();
             this.plane_mesh.setMatrixAt(i, temp.matrix);
             this.plane_mesh.instanceMatrix.needsUpdate = true;
@@ -73,7 +73,7 @@ export default class Env{
             if(temp.position.z < -35)
                 temp.position.set(this.choice[Math.round(Math.random() * 2)], Math.round(Math.random()) * 2, 343)
             else
-                temp.position.z -= 1;
+                temp.position.z -= speed;
             if(temp.position.z < 2 && temp.position.z > 0){
                 if(temp.position.y)
                     collision_space[1][this.choice.indexOf(temp.position.x)] = 1

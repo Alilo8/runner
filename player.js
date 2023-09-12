@@ -2,6 +2,8 @@ import * as THREE from 'three';
 
 export default class Player{
     constructor(scene){
+        this.scene = scene;
+        this.speed = 1;
         this.inAir = false;
         this.duck = false;
         this.velocity = -0.01;
@@ -23,18 +25,20 @@ export default class Player{
     }
     initEventListeners(){
         window.addEventListener('keypress', (e) => {
-            if(e.code === "KeyA" && this.box.position.x < 2)
+            if(e.code === "KeyA" && this.box.position.x < 14)
                 this.box.position.x += 2;
             if(e.code === "KeyD" && this.box.position.x > -2)
                 this.box.position.x -= 2;
-            if(e.code === "KeyW" && this.box.position.y < 2){
+            if(e.code === "KeyW" && this.box.position.y < 1){
                 this.inAir = true;
-                this.velocity = 0.2;
+                this.velocity = 0.15;
                 this.g = -0.005;
             }
             if(e.code === "KeyS"){
                 this.duck = true;
-                setTimeout(() => {this.duck = false; console.log(this.duck)}, 3000)
+                this.addFireBall();
+                this.speed = 2;
+                setTimeout(() => {this.duck = false; this.removeFireBall(); this.speed = 1}, 3000)
                 this.velocity = -0.2;
                 this.g = -0.005;
             }
@@ -86,12 +90,9 @@ export default class Player{
                 this.inAir = false;
                 this.box.position.y = 0;
             }
-            else if(this.box.position >= 4){
-                this.velocity *= -1;
-                this.g *= -1;
-            }
         }
         this.box.rotateX(0.3)
+        return this.speed
     }
     checkCollision(collision_space){
         if(this.inAir && !collision_space[1][this.choice.indexOf(this.box.position.x)])
@@ -102,7 +103,33 @@ export default class Player{
             return false
         return true;
     }
+    addFireBall(){
+        const position = this.box.position;
+        this.box.geometry.dispose()
+        this.box.material.dispose()
+        this.scene.remove(this.box)
+        const geom = new THREE.SphereGeometry();
+        const mat = new THREE.MeshStandardMaterial({color: 'white', roughness: 0, toneMapped: false, emissive: 'blue', emissiveIntensity: 5});
+        this.box = new THREE.Mesh(geom, mat);
+        this.box.castShadow = true;
 
+        this.box.position.copy(position);
+        this.scene.add(this.box)
+    }
+    removeFireBall(){
+        const position = this.box.position;
+        this.box.geometry.dispose()
+        this.box.material.dispose()
+        this.scene.remove(this.box)
+        const geom = new THREE.SphereGeometry();
+        const texture = new THREE.TextureLoader().load('assets/fire.png')
+        const mat = new THREE.MeshStandardMaterial({color: 'white', roughness: 0, map: texture});
+        this.box = new THREE.Mesh(geom, mat);
+        this.box.castShadow = true;
+
+        this.box.position.copy(position);
+        this.scene.add(this.box)
+    }
 
 
 }
